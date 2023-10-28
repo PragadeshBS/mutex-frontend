@@ -4,32 +4,30 @@ import signupStyles from "./signupStyles.module.css";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import CustomProgressBar from "../../../components/progressBar/CustomProgressBar";
+import { useSignup } from "../../../hooks/useSignup";
 
 const Signup = () => {
+  const { signup, isLoading, error: signUpError } = useSignup();
   const [error, setError] = useState("");
   const [completed, setCompleted] = useState(0);
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
     watch,
   } = useForm();
 
-  const addUser = (data) => {
+  useEffect(() => {
+    setError(signUpError);
+  }, [signUpError]);
+
+  const addUser = async (data) => {
+    setError("");
     if (data.password !== data.confirmPassword) {
       setError("Passwords do not match");
       return;
     }
-    axios
-      .post("/api/auth/signup", data)
-      .then(() => {
-        reset();
-        setError("");
-      })
-      .catch((err) => {
-        setError(err.response.data.error);
-      });
+    await signup(data);
   };
 
   useEffect(() => {
@@ -85,8 +83,15 @@ const Signup = () => {
                   className={`form-control m-3  ${
                     errors.regNo ? signupStyles.errorInput : ""
                   }`}
-                  {...register("regNo")}
+                  {...register("regNo", {
+                    required: "Register Number is Required",
+                  })}
                 ></input>
+                {errors.regNo && (
+                  <span className={`${signupStyles.error} `}>
+                    {errors.regNo.message}
+                  </span>
+                )}
               </div>
               <div className="form-group">
                 <label>
@@ -110,18 +115,17 @@ const Signup = () => {
               <div className="form-group">
                 <label>Department</label>
                 <select {...register("dept")} className="form-select  m-3">
-                  <option value="AM">Automobile Engineering</option>
+                  <option value="AERO">Aeronautical Engineering</option>
+                  <option value="AUTO">Automobile Engineering</option>
                   <option value="CT">Computer Science Engineering</option>
                   <option value="IT">Information Technology</option>
-                  <option value="EEE">
-                    Electrical and Electronics Engineering
-                  </option>
                   <option value="ECE">
                     Electronics and Communication Engineering
                   </option>
                   <option value="IE">Instrumentation Engineering</option>
                   <option value="ME">Mechanical Engineering</option>
                   <option value="PT">Production Technology</option>
+                  <option value="RPT">Rubber and Plastics Technology</option>
                   <option value="OTH">Other</option>
                 </select>
               </div>
@@ -180,7 +184,13 @@ const Signup = () => {
                   </span>
                 )}
               </div>
-              {error && <div className="alert alert-danger">{error}</div>}
+              {error && <div className="alert alert-danger">Oops! {error}</div>}
+              {isLoading && (
+                <div className="alert alert-info">
+                  Strap in, we're about to blast off into the world of tech and
+                  culture...
+                </div>
+              )}
               <div className="form-group  text-center">
                 <button
                   type="submit"

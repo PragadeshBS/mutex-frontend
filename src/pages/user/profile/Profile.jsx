@@ -7,40 +7,13 @@ import Loading from "../../loader/loading.svg";
 
 const Profile = () => {
   const [loading, setLoading] = useState(true);
-  const [success, setSuccess] = useState("");
-  const [error, setError] = useState("");
   const { token } = useAuthContext();
   const [userId, setUserId] = useState("");
   const {
     register,
-    handleSubmit,
     formState: { errors },
     reset,
   } = useForm();
-
-  const updateUser = (data) => {
-    if (data.password !== data.confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-    if (!data.password) {
-      delete data["password"];
-      delete data["confirmPassword"];
-    }
-    axios
-      .patch(`/api/auth/user/${userId}`, data, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        reset();
-        setError("");
-        setSuccess("Profile updated successfully");
-      })
-      .catch((err) => {
-        setSuccess("");
-        setError(err.response.data.error);
-      });
-  };
 
   useEffect(() => {
     axios
@@ -82,7 +55,7 @@ const Profile = () => {
         <h1 className="display-3 pt-3">Profile</h1>
         <div className="col-lg-8 mx-auto">
           <div className="EventCreationForm  my-3 py-4 px-5 border shadow rounded">
-            <form className="pt-3" onSubmit={handleSubmit(updateUser)}>
+            <form className="pt-3">
               <div className="form-group">
                 <label>
                   Name <span className="text-danger">*</span>
@@ -96,6 +69,7 @@ const Profile = () => {
                   className={`form-control m-3 ${
                     errors.userName ? ProfileStyles.errorInput : ""
                   }`}
+                  readOnly
                 ></input>
                 {errors.userName && (
                   <span className={`${ProfileStyles.error} `}>
@@ -111,6 +85,7 @@ const Profile = () => {
                     errors.regNo ? ProfileStyles.errorInput : ""
                   }`}
                   {...register("regNo")}
+                  readOnly
                 ></input>
               </div>
               <div className="form-group">
@@ -125,6 +100,7 @@ const Profile = () => {
                   {...register("mobile", {
                     required: "Mobile Number is Required",
                   })}
+                  readOnly
                 ></input>
                 {errors.mobile && (
                   <span className={`${ProfileStyles.error} `}>
@@ -140,6 +116,7 @@ const Profile = () => {
                     errors.dept ? ProfileStyles.errorInput : ""
                   }`}
                   {...register("dept")}
+                  readOnly
                 ></input>
               </div>
               <div className="form-group">
@@ -152,46 +129,13 @@ const Profile = () => {
                     errors.email ? ProfileStyles.errorInput : ""
                   }`}
                   {...register("email", { required: "Email is required" })}
+                  readOnly
                 ></input>
                 {errors.email && (
                   <span className={`${ProfileStyles.error} `}>
                     {errors.email.message}
                   </span>
                 )}
-              </div>
-              <div className="form-group">
-                <label>
-                  Password <span className="text-danger">*</span>
-                </label>
-                <input
-                  type="password"
-                  className={`form-control m-3  ${
-                    errors.email ? ProfileStyles.errorInput : ""
-                  }`}
-                  {...register("password", {})}
-                ></input>
-              </div>
-              <div className="form-group">
-                <label>
-                  Confirm Password <span className="text-danger">*</span>
-                </label>
-                <input
-                  type="password"
-                  className={`form-control m-3  ${
-                    errors.email ? ProfileStyles.errorInput : ""
-                  }`}
-                  {...register("confirmPassword", {})}
-                ></input>
-              </div>
-              {success && <div className="alert alert-success">{success}</div>}
-              {error && <div className="alert alert-danger">{error}</div>}
-              <div className="form-group  text-center">
-                <button
-                  type="submit"
-                  className="btn btn-primary my-2 ms-1 btn-lg"
-                >
-                  Update Profile
-                </button>
               </div>
             </form>
           </div>
