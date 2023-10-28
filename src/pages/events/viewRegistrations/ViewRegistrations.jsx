@@ -3,16 +3,15 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import EventInformation from "../eventDetails/eventInformation";
 import { useAuthContext } from "../../../hooks/useAuthContext";
-import RemoveParticipantsConfirmationModal from "../../../components/modals/RemoveParticipantsConfirmationModal";
 import { Store } from "react-notifications-component";
 import Loading from "../../loader/loading.svg";
+import { set } from "date-fns";
 
 const ViewRegistrations = () => {
   const [event, setEvent] = useState({});
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
   const [participants, setParticipants] = useState([]);
-  const [showRemoveModal, setShowRemoveModal] = useState(false);
   const { token } = useAuthContext();
 
   useEffect(() => {
@@ -29,27 +28,10 @@ const ViewRegistrations = () => {
     });
   }, [id, token]);
 
-  const removeParticipants = () => {
-    axios
-      .delete("/api/events/all-participants/" + id, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then(() => {
-        Store.addNotification({
-          title: "Success!",
-          message: "Removed all participants",
-          type: "success",
-          insert: "top",
-          container: "top-right",
-          animationIn: ["animate__animated", "animate__fadeIn"],
-          animationOut: ["animate__animated", "animate__fadeOut"],
-          dismiss: {
-            duration: 3500,
-            onScreen: true,
-          },
-        });
-        setParticipants([]);
-      });
+  const backGroundStyles = {
+    backgroundColor: "#f8f9fa",
+    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+    marginTop: "20px",
   };
 
   if (loading) {
@@ -66,24 +48,29 @@ const ViewRegistrations = () => {
   }
 
   return (
-    <div className="container">
+    <div className="container" style={backGroundStyles}>
       <h1 className="display-3">Participants</h1>
-      <h3>{event.eventName}</h3>
+      <p class="text-muted">
+        <a href="#" class="text-reset">
+          <h3>{event.eventName}</h3>
+        </a>
+      </p>
       <EventInformation detail={event} />
       {participants.length === 0 && (
-        <div className="text-center my-3">
+        <div className="text-center my-3 pb-2">
           <h6 className="display-6">No participants yet</h6>
         </div>
       )}
       {participants.length > 0 && (
-        <div>
+        <div className="p-2">
           <table className="table table-striped">
             <thead>
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Reg. no.</th>
                 <th scope="col">Name</th>
-                <th scope="col">Email</th>
+                <th scope="col">Mobile</th>
+                <th scope="col">Year of Study</th>
                 <th scope="col">Department</th>
               </tr>
             </thead>
@@ -95,7 +82,8 @@ const ViewRegistrations = () => {
                       <td>{idx + 1}</td>
                       <td>{p.regNo}</td>
                       <td>{p.userName}</td>
-                      <td>{p.email}</td>
+                      <td>{p.mobile}</td>
+                      <td>{2024 - parseInt(p.regNo.substring(0, 4))}</td>
                       <td>{p.dept}</td>
                       <td></td>
                     </tr>
@@ -104,19 +92,6 @@ const ViewRegistrations = () => {
             </tbody>
             <tbody></tbody>
           </table>
-          <div className="my-3 text-center">
-            <button
-              onClick={() => setShowRemoveModal(true)}
-              className="btn btn-danger"
-            >
-              Remove all participants
-            </button>
-            <RemoveParticipantsConfirmationModal
-              isOpen={showRemoveModal}
-              close={() => setShowRemoveModal(false)}
-              removeParticipants={removeParticipants}
-            />
-          </div>
         </div>
       )}
     </div>

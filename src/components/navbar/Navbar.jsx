@@ -1,12 +1,28 @@
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { useLogout } from "../../hooks/useLogout";
 import SearchBar from "./SearchBar";
 
 const Navbar = () => {
-  const { user } = useAuthContext();
+  const { user, token } = useAuthContext();
   const { logout } = useLogout();
   const navigate = useNavigate();
+  const [admin, setAdmin] = useState(false);
+  useEffect(() => {
+    axios
+      .get("/api/users", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        setAdmin(res.data.isAdmin);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [token]);
+
   return (
     <nav className="navbar navbar-expand-lg bg-light">
       <div className="container-fluid">
@@ -26,21 +42,20 @@ const Navbar = () => {
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item">
-              <Link className="nav-link active" to="/upcoming-events">
-                Upcoming Events
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link active" to="/archives">
-                Archives
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link active" to="/eventcreationform">
-                Create Event
-              </Link>
-            </li>
+            {admin && (
+              <li className="nav-item">
+                <Link className="nav-link active" to="/archives">
+                  Archives
+                </Link>
+              </li>
+            )}
+            {admin && (
+              <li className="nav-item">
+                <Link className="nav-link active" to="/eventcreationform">
+                  Create Event
+                </Link>
+              </li>
+            )}
           </ul>
           {!user && (
             <>
@@ -78,11 +93,13 @@ const Navbar = () => {
                       My profile
                     </Link>
                   </li>
-                  <li>
-                    <Link className="dropdown-item" to="/organised-events">
-                      Organised events
-                    </Link>
-                  </li>
+                  {admin && (
+                    <li>
+                      <Link className="dropdown-item" to="/organised-events">
+                        Organised events
+                      </Link>
+                    </li>
+                  )}
                   <li>
                     <Link className="dropdown-item" to="/participated-events">
                       Participated events

@@ -45,7 +45,7 @@ function App() {
       <BrowserRouter>
         <Header />
         <Navbar />
-        <div style={{ backgroundImage: `url("/static/images/bg.png")` }}>
+        <div>
           <Routes>
             <Route path="/" element={<Viewevents category="UPCOMING" />} />
             <Route path="/eventdetails/:id" element={<EventDetail />} />

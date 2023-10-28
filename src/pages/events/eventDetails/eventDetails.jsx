@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import Loading from "../../loader/loading.svg";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 import Recommendations from "../../../components/events/Recommendations";
+import PrizeDetails from "./prizeDetails";
 
 const EventDetail = () => {
   const { user, token } = useAuthContext();
@@ -100,7 +101,12 @@ const EventDetail = () => {
             src={data.image ? `/api/events/image/${data._id}` : image1}
             className={`card-img-top d-block mx-auto m-3 ${classname}`}
             alt="..."
-            style={{ maxWidth: "400px" }}
+            style={{
+              maxWidth: "400px",
+              borderRadius: "5px",
+              boxShadow:
+                "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px",
+            }}
             onLoad={() => {
               setClassname("view");
               setLoadClass("hide");
@@ -123,10 +129,10 @@ const EventDetail = () => {
               unregister={unregister}
               regLoading={registrationLoading}
             />
+            <PrizeDetails event={data} />
           </div>
         </div>
       </div>
-      <Recommendations eventId={id} />
     </div>
   );
 };
