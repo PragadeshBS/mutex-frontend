@@ -1,3 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@700&family=Josefin+Slab:wght@600&display=swap');
+
+.title-text{
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+.subtitle-text{
+  font-family: 'Josefin Slab', serif;
+}
+
 .logo-img {
   max-width: 100px;
 }
