@@ -19,7 +19,7 @@ const TestPage = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       )
       .then((res) => {
-        console.log(res.data);
+        console.log("Done");
       });
   };
   return (

@@ -45,6 +45,7 @@ const EventDetailsForm = ({
     if (formData.contactEmail) completed += 1;
     if (formData.link) completed += 1;
     if (formData.otherInfo) completed += 1;
+    if (formData.eventType) completed += 1;
     setProgress((completed * 100) / 10);
   }, [formData]);
   return (
@@ -138,6 +139,53 @@ const EventDetailsForm = ({
                 <option value="OTH">Other</option>
               </select>
             </div>
+            <div className="form-group">
+              <label>
+                Event Type <span className="text-danger">*</span>
+              </label>
+              <select
+                value={formData.eventType}
+                onChange={(e) =>
+                  setFormData({ ...formData, eventType: e.target.value })
+                }
+                required={true}
+                className="form-select w-75 m-3"
+              >
+                <option value="Technical">Technical</option>
+                <option value="Non-technical">Non-Technical</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label>
+                First Prize Money <span className="text-danger">*</span>
+              </label>
+              <TextInput
+                trigger={["", " "]}
+                required={true}
+                type="text"
+                className="create-event-text-input form-control m-3 w-75"
+                value={formData.firstPrizeMoney}
+                onChange={(e) =>
+                  setFormData({ ...formData, firstPrizeMoney: e })
+                }
+              ></TextInput>
+            </div>
+            <div className="form-group">
+              <label>
+                Second Prize Money <span className="text-danger">*</span>
+              </label>
+              <TextInput
+                trigger={["", " "]}
+                required={true}
+                type="text"
+                className="create-event-text-input form-control m-3 w-75"
+                value={formData.secondPrizeMoney}
+                onChange={(e) =>
+                  setFormData({ ...formData, secondPrizeMoney: e })
+                }
+              ></TextInput>
+            </div>
+
             <div className="form-group">
               <label>
                 Contact Name <span className="text-danger">*</span>

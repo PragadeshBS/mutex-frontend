@@ -13,7 +13,7 @@ const Header = () => {
             />
           </div>
           <div className="ms-3 title">
-            <span className="h1 text-center">Events</span>
+            <span className="h1 text-center">MUTEX</span>
             <span className="h5 text-center">MIT Campus, Anna University</span>
           </div>
           <div>

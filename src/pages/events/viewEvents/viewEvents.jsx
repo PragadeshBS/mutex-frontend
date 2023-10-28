@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import Loading from "../../loader/loading.svg";
-import Pagination from "./Pagination";
 
 import Highlighter from "react-highlight-words";
 import "./viewEvents.css";
@@ -24,6 +23,10 @@ const Viewevents = ({ category }) => {
   const [loading, setLoading] = useState(true);
   const [detail, setDetail] = useState([]);
   const [filter, setFilterDetail] = useState(detail);
+  const [technicalEvents, setTechnicalEvents] = useState([]);
+  const [nonTechnicalEvents, setNonTechnicalEvents] = useState([]);
+  const [isTechical, setIsTechnical] = useState(true);
+  const [isNonTechical, setIsNonTechnical] = useState(true);
   useEffect(() => {
     const fetchDetail = () => {
       axios.get(fetchUrl).then((response) => {
@@ -32,20 +35,31 @@ const Viewevents = ({ category }) => {
         });
         setDetail(response.data);
         setFilterDetail(response.data);
+        setTechnicalEvents(
+          response.data.filter((x) => {
+            return x.eventType === "Technical";
+          })
+        );
+        setNonTechnicalEvents(
+          response.data.filter((x) => {
+            return x.eventType === "Non-technical";
+          })
+        );
         setLoading(false);
       });
     };
     fetchDetail();
   }, [fetchUrl]);
   const searchdept = (e) => {
-    if (e.target.value === "*") {
-      setFilterDetail(detail);
+    if (e.target.value === "Technical") {
+      setIsTechnical(true);
+      setIsNonTechnical(false);
+    } else if (e.target.value === "Non-technical") {
+      setIsTechnical(false);
+      setIsNonTechnical(true);
     } else {
-      setFilterDetail(
-        detail.filter((x) => {
-          return x.dept === e.target.value;
-        })
-      );
+      setIsTechnical(true);
+      setIsNonTechnical(true);
     }
   };
   const [Search, setSearch] = useState("*");
@@ -90,7 +104,7 @@ const Viewevents = ({ category }) => {
       <div className="row align-items-center">
         <div className="col-2">
           <h1 className="display-3">
-            {category === "UPCOMING" ? "Upcoming Events" : "Event Archives"}
+            {category === "UPCOMING" ? "Events" : "Event Archives"}
           </h1>
         </div>
         <div className="col-4"></div>
@@ -114,17 +128,8 @@ const Viewevents = ({ category }) => {
             <option className="" value="*">
               All
             </option>
-            <option value="AM">Automobile Engineering</option>
-            <option value="CT">Computer Science Engineering</option>
-            <option value="IT">Information Technology</option>
-            <option value="EEE">Electrical and Electronics Engineering</option>
-            <option value="ECE">
-              Electronics and Communication Engineering
-            </option>
-            <option value="IE">Instrumentation Engineering</option>
-            <option value="ME">Mechanical Engineering</option>
-            <option value="PT">Production Technology</option>
-            <option value="OTH">Others</option>
+            <option value="Technical">Technical</option>
+            <option value="Non-technical">Non-Technical</option>
           </select>
         </div>
       </div>
@@ -134,66 +139,127 @@ const Viewevents = ({ category }) => {
         </div>
       )}
       <div className="row">
-        {filter.map((item) => {
-          return (
-            <div
-              key={item._id}
-              className="card m-5 p-1 col-1 mx-auto pop-out-card with-transform animateText"
-              style={{ width: "18rem" }}
-            >
-              <img
-                src={item.image ? `/api/events/image/${item._id}` : image1}
-                className={`card-img-top ${
-                  item.imageLoading ? "hide" : "view"
-                }`}
-                style={{
-                  maxHeight: "200px",
-                }}
-                alt="..."
-                onLoad={() => {
-                  let temp = filter.map((event) => {
-                    if (event._id === item._id) {
-                      event.imageLoading = false;
-                    }
-                    return event;
-                  });
-                  setFilterDetail(temp);
-                }}
-              />
-              <img
-                src={Loading}
-                alt="..."
-                className={`mx-auto  ${item.imageLoading ? "view" : "hide"}`}
-              />
-              <div className="card-body">
-                <h5 className="card-title">
-                  <Highlighter
-                    highlightClassName="highlight"
-                    searchWords={[Search]}
-                    autoEscape={true}
-                    textToHighlight={item.eventName}
-                  />
-                </h5>
-                <p className="card-text">
-                  {format(
-                    new Date(item.eventStartDate.substr(0, 16)),
-                    "dd MMM yyyy-h:mm a"
-                  )}
-                </p>
-                <Link to={`/eventdetails/${item._id}`}>
-                  <span className="btn btn-primary">View Details</span>
-                </Link>
+        {isTechical && <h1 className="display-5">Technical Events</h1>}
+        {isTechical && technicalEvents.length === 0 && (
+          <div className="display-6 text-center my-5">
+            No technical events found
+          </div>
+        )}
+        {isTechical &&
+          technicalEvents.map((item) => {
+            return (
+              <div
+                key={item._id}
+                className="card m-5 p-1 col-1 mx-auto pop-out-card with-transform animateText"
+                style={{ width: "18rem" }}
+              >
+                <img
+                  src={item.image ? `/api/events/image/${item._id}` : image1}
+                  className={`card-img-top ${
+                    item.imageLoading ? "hide" : "view"
+                  }`}
+                  style={{
+                    maxHeight: "200px",
+                  }}
+                  alt="..."
+                  onLoad={() => {
+                    let temp = filter.map((event) => {
+                      if (event._id === item._id) {
+                        event.imageLoading = false;
+                      }
+                      return event;
+                    });
+                    setFilterDetail(temp);
+                  }}
+                />
+                <img
+                  src={Loading}
+                  alt="..."
+                  className={`mx-auto  ${item.imageLoading ? "view" : "hide"}`}
+                />
+                <div className="card-body">
+                  <h5 className="card-title">
+                    <Highlighter
+                      highlightClassName="highlight"
+                      searchWords={[Search]}
+                      autoEscape={true}
+                      textToHighlight={item.eventName}
+                    />
+                  </h5>
+                  <p className="card-text">
+                    {format(
+                      new Date(item.eventStartDate.substr(0, 16)),
+                      "dd MMM yyyy-h:mm a"
+                    )}
+                  </p>
+                  <Link to={`/eventdetails/${item._id}`}>
+                    <span className="btn btn-primary">View Details</span>
+                  </Link>
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
-      <div className="row pb-5">
-        <Pagination
-          data={detail}
-          setVisibleData={setFilterDetail}
-          page={category}
-        />
+            );
+          })}
+        {isNonTechical && <h1 className="display-5">Non-Technical Events</h1>}
+        {isNonTechical && nonTechnicalEvents.length === 0 && (
+          <div className="display-6 text-center my-5">
+            No non-technical events found
+          </div>
+        )}
+
+        {isNonTechical &&
+          nonTechnicalEvents.map((item) => {
+            return (
+              <div
+                key={item._id}
+                className="card m-5 p-1 col-1 mx-auto pop-out-card with-transform animateText"
+                style={{ width: "18rem" }}
+              >
+                <img
+                  src={item.image ? `/api/events/image/${item._id}` : image1}
+                  className={`card-img-top ${
+                    item.imageLoading ? "hide" : "view"
+                  }`}
+                  style={{
+                    maxHeight: "200px",
+                  }}
+                  alt="..."
+                  onLoad={() => {
+                    let temp = filter.map((event) => {
+                      if (event._id === item._id) {
+                        event.imageLoading = false;
+                      }
+                      return event;
+                    });
+                    setFilterDetail(temp);
+                  }}
+                />
+                <img
+                  src={Loading}
+                  alt="..."
+                  className={`mx-auto  ${item.imageLoading ? "view" : "hide"}`}
+                />
+                <div className="card-body">
+                  <h5 className="card-title">
+                    <Highlighter
+                      highlightClassName="highlight"
+                      searchWords={[Search]}
+                      autoEscape={true}
+                      textToHighlight={item.eventName}
+                    />
+                  </h5>
+                  <p className="card-text">
+                    {format(
+                      new Date(item.eventStartDate.substr(0, 16)),
+                      "dd MMM yyyy-h:mm a"
+                    )}
+                  </p>
+                  <Link to={`/eventdetails/${item._id}`}>
+                    <span className="btn btn-primary">View Details</span>
+                  </Link>
+                </div>
+              </div>
+            );
+          })}
       </div>
     </div>
   );

@@ -22,6 +22,9 @@ const EventCreationForm = () => {
     contactName: "",
     contactPhone: "",
     contactEmail: "",
+    eventType: "Technical",
+    firstPrizeMoney: "",
+    secondPrizeMoney: "",
     link: "",
     otherInfo: "",
     public: true,
@@ -79,10 +82,26 @@ const EventCreationForm = () => {
           .then(() => {
             setError("");
             setSuccess("Event created successfully");
-            // reset();
+            setFormData({
+              eventName: "",
+              eventStartDate: "",
+              eventEndDate: "",
+              venue: "",
+              dept: "",
+              contactName: "",
+              contactPhone: "",
+              contactEmail: "",
+              eventType: "Technical",
+              firstPrizeMoney: "",
+              secondPrizeMoney: "",
+              link: "",
+              otherInfo: "",
+              public: true,
+              whatsapp: true,
+            });
           })
           .catch((err) => {
-            setError(err.response.data.error);
+            setError(err.response.data.error + "hello");
           });
       };
 
