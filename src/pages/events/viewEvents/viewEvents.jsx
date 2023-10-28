@@ -108,17 +108,7 @@ const Viewevents = ({ category }) => {
           </h1>
         </div>
         <div className="col-4"></div>
-        <div className="col-lg-3">
-          <input
-            style={{ width: "100%", height: "75%" }}
-            className="form-control"
-            type="text"
-            id="myInput"
-            onChange={search}
-            placeholder="Search for events.."
-            title="Type in a event"
-          />
-        </div>
+        <div className="col-lg-3"></div>
         <div className="col-lg-3">
           <select
             className="form-select mb-2"
