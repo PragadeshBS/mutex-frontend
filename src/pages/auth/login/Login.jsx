@@ -28,16 +28,17 @@ const Login = () => {
 
   return (
     <div className="EventCreationPage container">
-      {isLoading && <div>Just a sec...</div>}
       <div className="row pb-5">
         <div className="px-5">
           <Header title={"Login"} />
         </div>
         <div className="col-lg-8 mx-auto">
           <div className="EventCreationForm py-4 px-3 border shadow rounded">
-            {flow && (
+            {(flow || isLoading) && (
               <div className="alert alert-info text-center mx-auto">
-                Login to continue...
+                {isLoading
+                  ? "Weaving the login magic, almost there..."
+                  : "Your journey begins with a login. Go ahead!"}
               </div>
             )}
             <form className="pt-3" onSubmit={handleSubmit(addUser)}>

@@ -99,7 +99,7 @@ const EventOrganisersForm = ({ organizers, setOrganizers, id }) => {
       });
   };
   return (
-    <div className="row my-3">
+    <div className="my-3">
       <div className="shadow py-4 px-5 rounded col-lg-8">
         <h3>Event Organisers</h3>
         <p className="text-muted">

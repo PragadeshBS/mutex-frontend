@@ -178,7 +178,7 @@ const UpdateEvent = () => {
   }
 
   return (
-    <div className="container">
+    <div className="container row mx-auto">
       <Header title={"Update event"} />
       <EventDetailsForm
         formData={formData}
