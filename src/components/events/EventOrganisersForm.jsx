@@ -7,7 +7,7 @@ import ConfirmationModal from "../modals/ConfirmationModal";
 
 const EventOrganisersForm = ({ organizers, setOrganizers, id }) => {
   const { user, token } = useAuthContext();
-  const [organizerEmail, setOrganizerEmail] = useState("");
+  const [organizerRegNo, setOrganizerRegNo] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [userName, setUserName] = useState("");
   const [userIdToDelete, setUserIdToDelete] = useState("");
@@ -16,7 +16,7 @@ const EventOrganisersForm = ({ organizers, setOrganizers, id }) => {
     axios
       .post(
         `/api/events/organizers/${id}`,
-        { organizerEmail },
+        { organizerRegNo },
         { headers: { Authorization: `Bearer ${token}` } }
       )
       .then((res) => {
@@ -109,12 +109,11 @@ const EventOrganisersForm = ({ organizers, setOrganizers, id }) => {
         <div>
           <form onSubmit={handleSubmit}>
             <input
-              placeholder="Organiser's email"
-              type="email"
+              placeholder="Organiser's register number"
               className="form-control"
-              value={organizerEmail}
+              value={organizerRegNo}
               onChange={(e) => {
-                setOrganizerEmail(e.target.value);
+                setOrganizerRegNo(e.target.value);
               }}
               required={true}
             />
