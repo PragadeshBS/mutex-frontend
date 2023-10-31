@@ -7,8 +7,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Loading from "../../loader/loading.svg";
 import { useAuthContext } from "../../../hooks/useAuthContext";
-import Recommendations from "../../../components/events/Recommendations";
 import PrizeDetails from "./prizeDetails";
+import config from "../../../config";
 
 const EventDetail = () => {
   const { user, token } = useAuthContext();
@@ -98,7 +98,11 @@ const EventDetail = () => {
       <div className="mt-5 mb-5 pb-3">
         <section className="eventDetail">
           <img
-            src={data.image ? `/api/events/image/${data._id}` : image1}
+            src={
+              data.image
+                ? `${config.apiUrl}/api/events/image/${data._id}`
+                : image1
+            }
             className={`card-img-top d-block mx-auto m-3 ${classname}`}
             alt="..."
             style={{
@@ -114,6 +118,8 @@ const EventDetail = () => {
           />
           <img src={Loading} alt="..." className={`mx-auto ${loadclass}`} />
         </section>
+
+        <div>{window.location.pathname}</div>
         <div className="row mt-5">
           <div className="col-lg-7">
             <EventInformation detail={data} />

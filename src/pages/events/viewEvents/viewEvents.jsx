@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import Loading from "../../loader/loading.svg";
+import config from "../../../config";
 
 import Highlighter from "react-highlight-words";
 import "./viewEvents.css";
@@ -144,7 +145,11 @@ const Viewevents = ({ category }) => {
                 style={{ width: "18rem" }}
               >
                 <img
-                  src={item.image ? `/api/events/image/${item._id}` : image1}
+                  src={
+                    item.image
+                      ? `${config.apiUrl}/api/events/image/${item._id}`
+                      : image1
+                  }
                   className={`card-img-top ${
                     item.imageLoading ? "hide" : "view"
                   }`}
@@ -205,7 +210,11 @@ const Viewevents = ({ category }) => {
                 style={{ width: "18rem" }}
               >
                 <img
-                  src={item.image ? `/api/events/image/${item._id}` : image1}
+                  src={
+                    item.image
+                      ? `${config.apiUrl}/api/events/image/${item._id}`
+                      : image1
+                  }
                   className={`card-img-top ${
                     item.imageLoading ? "hide" : "view"
                   }`}

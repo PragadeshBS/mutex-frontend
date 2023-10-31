@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import image1 from "../../../images/e1.png";
+import config from "../../../config";
 
 const ParticipatedEventsList = ({ events }) => {
   return (
@@ -14,7 +15,11 @@ const ParticipatedEventsList = ({ events }) => {
               key={event._id}
             >
               <img
-                src={event.image ? `/api/events/image/${event._id}` : image1}
+                src={
+                  event.image
+                    ? `${config.apiUrl}/api/events/image/${event._id}`
+                    : image1
+                }
                 className="card-img-top"
                 alt="..."
               />
