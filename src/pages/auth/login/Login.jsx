@@ -87,6 +87,11 @@ const Login = () => {
                   Login
                 </button>
               </div>
+              <div>
+                <div className="small text-muted">
+                  Don't have an account? <Link to="/signup">Sign up</Link> here.
+                </div>
+              </div>
             </form>
           </div>
         </div>

@@ -22,6 +22,7 @@ function Router({ authContext }) {
   useEffect(() => {
     axios.post("/api/logs/", {
       path: location.pathname,
+      user,
     });
   }, [location]);
   return (
