@@ -1,5 +1,5 @@
 const config = {
-  apiUrl: "https://mutex-backend.azurewebsites.net",
+  apiUrl: "https://mutex-api.azurewebsites.net",
 };
 
 export default config;
